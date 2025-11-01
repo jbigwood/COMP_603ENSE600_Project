@@ -1,0 +1,12 @@
+/target/
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/build/
+
+/data/Appdatabase/
+/derby.log
+
+.DS_Store
+Thumbs.db

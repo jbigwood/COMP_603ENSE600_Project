@@ -4,18 +4,25 @@
 
 package com.mycompany.vocab_app;
 
-import java.util.Scanner;
-import java.io.IOException;
-import io.exitoption;
-
-
-
-
 
 /**
  *
  * @author wkv8299
  */
+
+
+
+import java.util.Scanner;
+import java.io.IOException;
+import io.exitoption;
+
+import db.dbusers;
+import db.Database;
+import java.sql.SQLException;
+
+
+
+
 public class Main{
 
     public static void main(String[] args) {
@@ -27,8 +34,12 @@ public class Main{
         String ExistingPW = null;
         String acc = null;
         int accLevel = 0;
-        java.nio.file.Path userFile = null;
         
+        try{
+            Database.get();
+        } catch(SQLException e){
+            System.out.println("Database startup issue" + e.getMessage());
+        }
         
         Scanner input = new Scanner(System.in);
         
@@ -78,27 +89,21 @@ public class Main{
                         
                         System.out.println("Enter User name: ");
                         ExistingUN = input.nextLine();
-                        userFile = io.infostore.accinfo().resolve(ExistingUN + ".txt");
-                        
-                        if(!io.Users.userExists(userFile)){
-                            System.out.println("Unknown username, please signup");
-                            continue;
-                        }        System.out.println("Enter User password: ");
+                        System.out.println("Enter User password: ");
                         ExistingPW = input.nextLine();
-                        
+                     
                         try{
-                            if(!io.Users.verify(userFile, ExistingUN, ExistingPW)){
+                            if(!dbusers.verifyuser(ExistingUN, ExistingPW)){
                                 System.out.println("Incorrect Username or Password");
                                 continue;
                             }
                             acc = ExistingUN;
-                            accLevel = io.Users.acclevel(userFile);
-                            
+                            accLevel = dbusers.retreivelvl(acc);
                             System.out.println("Hello " + acc + ", Welcome back!" + "(Level: " + accLevel + ")");
-                        }catch(java.io.IOException e){
+                            
+                        }catch(SQLException e){
                             System.out.println("login issue: " + e.getMessage());
                             acc = null;
-                            userFile = null;
                             accLevel = 0;
                         }        
                         break;
@@ -107,35 +112,33 @@ public class Main{
                         
                         System.out.println("Please Enter desired Username: ");
                         NewUser = input.nextLine();
-                        
-                        userFile = io.infostore.accinfo().resolve(NewUser + ".txt");
-                        if(io.Users.userExists(userFile)){
-                            System.out.println("Sorry that username already exists");
-                            continue;
-                        }       
-                        
                         System.out.println("Please enter desired Password with minimum 8 characters: ");
                         NewPass = input.nextLine();
                         
+     
                         if(NewPass == null || NewPass.length() < 8){
                             System.out.println("Sorry that password is too short. Please enter 8 characters.");
                             continue;
-                        }        try{
-                            
-                            io.Users.New(userFile, NewUser, NewPass);
+                        }        
+                        
+                        try{
+                            boolean created = dbusers.createuser(NewUser,NewPass);
+                            if(!created){
+                                System.out.println("Sorry that Username is already in use, please try another");
+                                continue;
+                            }
                             acc = NewUser;
                             accLevel = 0;
-                            
-                            
                             System.out.println("Account created! Welcome " + NewUser);
                             
-                        }catch(java.io.IOException e){
+                        }catch(SQLException e){
                             System.out.println("Signup failed: " + e.getMessage());
                             
                             acc = null;
-                            userFile = null;
                             accLevel = 0;
-                        }       break;
+                        }      
+                        break;
+                        
                     default:
                         System.out.println("Im sorry that input is invalid, please try again");
                         break;
@@ -154,8 +157,8 @@ public class Main{
                     
                     
                     try{
-                        io.Users.ammendLevel(userFile, accLevel);
-                    } catch(java.io.IOException e){
+                        dbusers.newlvl(acc, accLevel);
+                    } catch(SQLException e){
                         System.out.println("Leveling Error: " + e.getMessage());
                         }
                     }

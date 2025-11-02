@@ -5,7 +5,7 @@
 package io;
 
 
-import quiz.Verbs;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
@@ -74,13 +74,8 @@ public class masterlist {
         }
         
         
-        Word v;
-        if("verb".equals(t[3])){
-            v = new Verbs(t[0], t[1], t[2] ,t[4], level);
-        }
-        else{
-            v = new Word(t[0], t[1], t[2], t[3] ,t[4], level);
-        }
+        Word v = new Word(t[0], t[1], t[2], t[3] ,t[4], level);
+        
             words.add(v);
             posNum.put(v.getposnum(),v);
         

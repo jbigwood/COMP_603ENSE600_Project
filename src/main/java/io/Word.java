@@ -15,7 +15,7 @@ public class Word {
     private final String englishmeaning;
     private final String wordreference;
     private final String type;
-    private int level;
+    private final int level;
     
     
     public Word(String posnum, String spanishword, String englishmeaning, String wordreference, String type, int level){

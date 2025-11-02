@@ -9,7 +9,7 @@ package gui;
  * @author Rebornsunrise
  */
 
-import quiz.Quiz;
+
 import db.Database;
 import db.dbusers;
 import javax.swing.*;

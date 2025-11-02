@@ -13,8 +13,7 @@ package com.mycompany.vocab_app;
 
 
 
-import db.Database;
-import java.sql.SQLException;
+
 
 
 

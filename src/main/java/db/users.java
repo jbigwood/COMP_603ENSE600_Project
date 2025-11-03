@@ -6,7 +6,7 @@ package db;
 
 /**
  *
- * @author Rebornsunrise
+ * @author wkv8299
  */
 
 import java.sql.Connection;

@@ -6,7 +6,7 @@ package quiz;
 
 /**
  *
- * @author Rebornsunrise
+ * @author wkv8299
  */
 
 

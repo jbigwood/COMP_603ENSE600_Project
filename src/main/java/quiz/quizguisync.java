@@ -26,7 +26,10 @@ public class quizguisync {
     
     public void quit(){
         quit = true;
-        area.setText("");
+        if(running){
+            end();
+        }
+        
     }
     public void reset(){
         quit = false;
@@ -102,13 +105,25 @@ public class quizguisync {
     
     private void shownext(){
        
+        if(!running||quit){
+            return;
+        }
         io.Word qs = quiz.Quiz.currentquestion(words, num);
         println("Question: " + num + " What is " + qs.getSpanishword() + " in English?" + "...... English left for testing: ans = " + qs.getEnglishmeaning());
            
         }
             
     private void end(){
-        println("\nYou got " + correct + " correct! Level: " + level);
+        if(quit){
+            return;
+        }
+        area.setText("");
+        
         running = false;
-    }        
+    }
+    
+    public String endingmesg(){
+        String endingmesg = "\nYou got " + correct + " correct! Level: " + level;
+        return endingmesg;
+    }
 }

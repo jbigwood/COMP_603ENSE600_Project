@@ -11,7 +11,7 @@ package gui;
 
 
 import db.Database;
-import db.dbusers;
+import db.users;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -186,7 +186,7 @@ public class Windowmain extends JPanel {
                 
                 if(!continuing && !bridge.qrun()){
                     try{
-                        dbusers.newlvl(currentUser, bridge.currentLevel());
+                        users.changelvl(currentUser, bridge.currentLevel());
                     }catch(SQLException ea){
                         println("Issue saving level to account: " + ea.getMessage());
                     }
@@ -246,6 +246,8 @@ public class Windowmain extends JPanel {
         card.show(cards, menucard);
     }
     
+    
+    
     //login button actions after click
     public void clicklogin(){
         String username = JOptionPane.showInputDialog(this, "Please enter your Username:");
@@ -259,15 +261,15 @@ public class Windowmain extends JPanel {
         }
         
         try{
-            boolean accountexists = db.dbusers.verifyuser(username, password);
-            if(!accountexists){
+                       
+            if(!db.users.verifyuser(username, password)){
                 JOptionPane.showMessageDialog(this,"Inncorrect  Username or Password\nPlease try again");
                 return;
             }
             
             //set user info
             this.currentUser = username;
-            this.currentLevel = db.dbusers.retreivelvl(username);
+            this.currentLevel = db.users.lvl(username);
             
             //shift to main menu as login cleared
             outputArea.setText(outputArea.getText() + "Welcome " + currentUser + " You are level: " +currentLevel+"\n");
@@ -296,8 +298,8 @@ public class Windowmain extends JPanel {
         }
         
         try{
-            boolean newacc = db.dbusers.createuser(username, password);
-            if(!newacc){
+            
+            if(!db.users.newuser(username, password)){
                 JOptionPane.showMessageDialog(this, "The username you entered already exists, please try again");
                 return;
             }
@@ -338,12 +340,14 @@ public class Windowmain extends JPanel {
     }
     
     private void clickquizquit(){
+        
         bridge.quit();
+        
         bridge.in("");
         
         int newLevel = bridge.currentLevel();
         try{
-            dbusers.newlvl(currentUser, newLevel);
+            users.changelvl(currentUser, newLevel);
         }catch(SQLException e){
             println("Issue saving level: " + e.getMessage());
         }
@@ -354,6 +358,9 @@ public class Windowmain extends JPanel {
         anspanel.setVisible(false);
         
         showmainmenu();
+        
+        String results = bridge.endingmesg();
+        outputArea.setText(results + "\n");
         outputArea.setText(outputArea.getText() + "Welcome " + currentUser + " You are level: " +currentLevel+"\n");
         
         quizbutton.setEnabled(true);
